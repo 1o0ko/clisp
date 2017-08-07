@@ -1,5 +1,23 @@
 #/bin/bash
 INPUT_FILE=$1
 OUTPUT_FILE="${INPUT_FILE%%.*}"
+RUN=false
+
+while getopts "ro:" opt ${@:2}; do
+    case "$opt" in
+	r)   RUN=true
+	     ;;
+	o)   OUTPUT_FILE="$OPTARG"
+	     ;;
+    	\?)  echo "Invalid option: -$OPTARG" >&2
+	     exit 1	     
+	     ;;
+    esac
+done
 
 cc -std=c99 -Wall $INPUT_FILE -o ./bin/$OUTPUT_FILE
+echo "Compiled to ./bin/$OUTPUT_FILE"
+
+if [ $RUN = true ]; then
+    ./bin/$OUTPUT_FILE
+fi
