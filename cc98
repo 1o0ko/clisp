@@ -2,9 +2,12 @@
 INPUT_FILE=$1
 OUTPUT_FILE="${INPUT_FILE%%.*}"
 RUN=false
+DEBUG=fasle
 
-while getopts "ro:" opt ${@:2}; do
+while getopts "dro:" opt ${@:2}; do
     case "$opt" in
+	d)   DEBUG=true
+	     ;;
 	r)   RUN=true
 	     ;;
 	o)   OUTPUT_FILE="$OPTARG"
@@ -15,7 +18,11 @@ while getopts "ro:" opt ${@:2}; do
     esac
 done
 
-cc -std=c99 -Wall $INPUT_FILE -o ./bin/$OUTPUT_FILE
+if [ $DEBUG = true ]; then
+    cc -g -std=c99 -Wall $INPUT_FILE -o ./bin/$OUTPUT_FILE
+else
+    cc -std=c99 -Wall $INPUT_FILE -o ./bin/$OUTPUT_FILE
+fi
 echo "Compiled to ./bin/$OUTPUT_FILE"
 
 if [ $RUN = true ]; then
